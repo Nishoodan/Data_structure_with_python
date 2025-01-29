@@ -1,103 +1,59 @@
 # Program for student ADT with chooise and user input
 
 class Student:
-    student = []
-    
-    def __init__(self, name, rollno, subject, marks1, marks2):
-        self.name = name
-        self.rollno = rollno
-        self.subject = subject
-        self.marks1 = marks1
-        self.marks2 = marks2
-    
-    @staticmethod
-    def add(student):
-        print('Enter student details')
-        name = input("Enter name: ")
-        rollno = int(input("Enter rollno: "))
-        subject = input("Enter subject: ")
-        marks1 = int(input("Enter marks1: "))
-        marks2 = int(input("Enter marks2: "))
-        Student.student.append(Student(name, rollno, subject, marks1, marks2))
-        
-    @staticmethod
-    def display(students):
-        if not students:
-            print('No student details')
-        else:
-            print('Total Student details')
-            for student in students:
-                print('Name:', student.name)
-                print('Rollno:', student.rollno)
-                print('Subject:', student.subject)
-                print('Marks1:', student.marks1)
-                print('Marks2:', student.marks2)
-                
-            
+    students_list = []
+
+    def __init__(self, name, rollno, subject):
+        self.name, self.rollno, self.subject = name, rollno, subject
+
+    def __str__(self):
+        return f"Name: {self.name}, Rollno: {self.rollno}, Subject: {self.subject}"
 
     @staticmethod
-    def search(student, rollno):
-        for index,students in enumerate(student):
-            if students.rollno == rollno:
-                print(students.name)
-                print(students.rollno)
-                print(students.subject)
-                print(students.marks1)
-                print(students.marks2)
-                return index
-        else:
-            print('Student not found')
-            return -1
-    
+    def add():
+        Student.students_list.append(Student(input("Name: "), int(input("Rollno: ")), input("Subject: ")))
+
     @staticmethod
-    def update(student, rollno):
-        up = Student.search(student, rollno)
-        if up != -1:
-            nrollno = input('Enter new rollno: ')
-            student[up].rollno = nrollno
-            print('Rollno updated')
-    
+    def display():
+        print("\n".join(map(str, Student.students_list)) if Student.students_list else "No students available.")
+
     @staticmethod
-    def delete(student, rollno):
-        a = Student.search(student, rollno)
-        if a != -1:
-            del student[a]
-            print('Student details deleted')
-        
+    def search(rollno):
+        for i, s in enumerate(Student.students_list):
+            if s.rollno == rollno:
+                print(s)
+                return i
+        print("Student not found.")
+        return -1
+
+    @staticmethod
+    def update(rollno):
+        idx = Student.search(rollno)
+        if idx != -1:
+            Student.students_list[idx].rollno = int(input("Enter new Roll No: "))
+            print("Updated successfully.")
+
+    @staticmethod
+    def delete(rollno):
+        idx = Student.search(rollno)
+        if idx != -1:
+            del Student.students_list[idx]
+            print("Deleted successfully.")
+
+    @staticmethod
     def menu():
-        while True:
-            print('\n Operations menu \n')
-            print('1. Add student details')
-            print('2. Display student details')
-            print('3. Search for student')
-            print('4. Update student details')
-            print('5. Delete student details')
-            print('6. Exit')
+        options = {
+            1: Student.add,
+            2: Student.display,
+            3: lambda: Student.search(int(input("Rollno: "))),
+            4: lambda: Student.update(int(input("Rollno: "))),
+            5: lambda: Student.delete(int(input("Rollno: ")))
+        }
 
-            choice = int(input('Enter your choice from 1-5: '))
-            if choice == 1:
-                Student.add(Student.student)
-                
-            elif choice == 2:
-                Student.display(Student.student)
-                
-            elif choice ==3:
-                rollno = int(input('Enter rollno to search:'))
-                Student.search(Student.student, rollno)
-            
-            elif choice ==4:
-                rollno = int(input('Enter rollno to update: '))
-                nrollno = int(input('Enter new roll no: '))
-                Student.update(Student.student,rollno)
-                
-            elif choice ==5:
-                rollno = int(input('Enter rollno to delete:'))
-                Student.delete(Student.student ,rollno)
-            
-            else:
-                if choice == 6:
-                    break
+        while (choice := int(input("\n1. Add\n2. Display\n3. Search\n4. Update\n5. Delete\n6. Exit\nChoose: "))) != 6:
+            options.get(choice, lambda: print("Invalid choice."))()
+
 
 Student.menu()
-                
+
                 
